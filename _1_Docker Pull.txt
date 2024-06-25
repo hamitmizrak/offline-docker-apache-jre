@@ -1,0 +1,16 @@
+docker search tomcat
+docker pull tomcat:9.0.8-jre8-alpine
+docker run  -d --name my_tomcat1 -p 1111:8080 tomcat:9.0.8-jre8-alpine
+
+docker ps 
+docker ps -a
+docker container ls 
+docker container ls -a 
+curl localhost:1111
+
+winpty docker container exec -it my_tomcat1 bash
+ls -al 
+cd bin 
+# shutdown.sh 
+
+docker container start my_tomcat1

@@ -1,0 +1,10 @@
+Docker Hub Repository name: apache_jre_ubuntu
+
+docker image ls 
+docker image tag --help 
+
+docker login
+docker image tag my_tomcat3:latest javahamitmizrak/apache_jre_ubuntu
+docker push javahamitmizrak/apache_jre_ubuntu
+
+docker pull javahamitmizrak/apache_jre_ubuntu

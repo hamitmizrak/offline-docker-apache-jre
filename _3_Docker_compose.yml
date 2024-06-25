@@ -1,0 +1,79 @@
+# docker-compose --version
+# docker-compose up
+# docker-compose up -d
+# docker-compose -f _3_Docker_compose.yml up
+# docker-compose down
+# docker-compose restart
+# docker-compose ps
+
+# restart: on-failure
+# restart: no => default olandır. Yani docker compose otomatik olarak restart yapsın
+# restart: unless-stopped => Konteynar durduğunda otomatik olarak yeniden başlasın
+# restart: always => Konteynar her zaman otomatik başlasın
+# restart: on-failure => konteryanar çökmesi halinde otomatik başlasın
+
+version: '3.8'
+
+services:
+  apache_tomcat_web:
+    container_name: my_tomcat3
+    image: my_tomcat3
+    restart: on-failure
+    #build: ./dizinAdi/
+    #build: ./
+    # Dockerfile farklı isimdeyse
+    build: 
+      context: .
+      dockerfile: _2_Dockerfile
+    ports:
+      - "3333:8080"
+    volumes:
+      - tomcat-logs:/usr/local/tomcat/logs
+      - tomcat-webapps:/usr/local/tomcat/webapps
+      - tomcat-conf:/usr/local/tomcat/conf
+
+volumes:
+  tomcat-logs:
+    driver: local
+  tomcat-webapps:
+    driver: local
+  tomcat-conf:
+    driver: local  
+
+# docker ps
+# winpty docker container  exec -it  my_tomcat3 bash
+# cd usr/local/tomcat/logs
+# cd usr/local/tomcat/webapps
+# cd usr/local/tomcat/conf
+# rm -rf examples
+# ls -al
+
+# docker-compose down
+# docker volume ls 
+# docker volume inspect desktop_tomcat-logs
+# docker volume inspect tomcat-webapps
+
+# docker-compose down
+# docker volume rm  tomcat-logs
+
+# winpty docker run -it --rm \
+# -v docker_apache_tomcat-conf://usr/local/tomcat/conf  \
+# -v docker_apache_tomcat-logs://usr/local/tomcat/logs \
+# -v docker_apache_tomcat-webapps://usr/local/tomcat/webapps \
+# my_tomcat3 bash
+
+
+# ls -al 
+# cd usr/local/tomcat/logs
+# ls -al 
+# cd usr/local/tomcat/webapps
+# Bu komut şunları yapar:
+
+# docker run: Yeni bir container çalıştırır.
+# -it: İnteraktif terminal modunda çalıştırır.
+# --rm: Container kapatıldığında otomatik olarak siler.
+# -v tomcat-logs:/data: tomcat-logs volume'unu container içindeki /data dizinine bağlar.
+# ubuntu: Ubuntu tabanlı bir container çalıştırır.
+# bash: Container içinde bash shell çalıştırır.
+
+
