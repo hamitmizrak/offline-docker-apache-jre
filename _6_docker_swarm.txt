@@ -1,0 +1,11 @@
+docker-compose -f _4_Docker_compose_replicas.yml up -d
+
+docker swarm init
+
+docker stack deploy -c _4_Docker_compose_replicas.yml tomcat-swarm
+
+docker stack --help
+docker stack ls
+docker stack rm tomcat-swarm 
+docker stack services tomcat-swarm
+docker service ls

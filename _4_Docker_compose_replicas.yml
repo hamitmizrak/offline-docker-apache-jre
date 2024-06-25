@@ -1,8 +1,7 @@
 # docker-compose --version
 # docker-compose up
 # docker-compose up -d
-# docker-compose -f _3_Docker_compose.yml up -d
-# docker-compose -f _3_Docker_compose.yml up
+# docker-compose -f _4_Docker_compose_replicas.yml up
 # docker-compose down
 # docker-compose restart
 # docker-compose ps
@@ -16,9 +15,9 @@
 version: '3.8'
 
 services:
-  apache_tomcat_web:
-    container_name: my_tomcat3
-    image: my_tomcat3
+  replicas_apache:
+    #container_name: my_tomcat4
+    image: my_tomcat4
     restart: on-failure
     #build: ./dizinAdi/
     #build: ./
@@ -27,13 +26,22 @@ services:
       context: .
       dockerfile: _2_Dockerfile
     ports:
-      - "3333:8080"
+      - "4444:8080"
     volumes:
       - tomcat-logs:/usr/local/tomcat/logs
       - tomcat-webapps:/usr/local/tomcat/webapps
       - tomcat-conf:/usr/local/tomcat/conf
-      - ./tomcat/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
-      - ./tomcat/context.xml:/usr/local/tomcat/webapps/manager/META-INF/context.xml
+
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+      replicas: 5
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure  
 
 volumes:
   tomcat-logs:
@@ -41,16 +49,16 @@ volumes:
   tomcat-webapps:
     driver: local
   tomcat-conf:
-    driver: local  
+    driver: local 
+
+
+
 
 # docker ps
 # winpty docker container  exec -it  my_tomcat3 bash
-# cat usr/local/tomcat/conf/tomcat-users.xml
 # cd usr/local/tomcat/logs
 # cd usr/local/tomcat/webapps
 # cd usr/local/tomcat/conf
-# ls -al
-# cat tomcat-users.xml
 # rm -rf examples
 # ls -al
 
@@ -62,11 +70,11 @@ volumes:
 # docker-compose down
 # docker volume rm  tomcat-logs
 
- #winpty docker run -it --rm -p 1111:8080 \
- #-v docker_apache_tomcat-conf://usr/local/tomcat/conf  \
- #-v docker_apache_tomcat-logs://usr/local/tomcat/logs \
- #-v docker_apache_tomcat-webapps://usr/local/tomcat/webapps \
- #my_tomcat3 bash
+# winpty docker run -it --rm \
+# -v docker_apache_tomcat-conf://usr/local/tomcat/conf  \
+# -v docker_apache_tomcat-logs://usr/local/tomcat/logs \
+# -v docker_apache_tomcat-webapps://usr/local/tomcat/webapps \
+# my_tomcat3 bash
 
 
 # ls -al 
@@ -81,5 +89,10 @@ volumes:
 # -v tomcat-logs:/data: tomcat-logs volume'unu container içindeki /data dizinine bağlar.
 # ubuntu: Ubuntu tabanlı bir container çalıştırır.
 # bash: Container içinde bash shell çalıştırır.
+
+
+# deploy kısmında, Swarm dağıtımı için ayarları yapıyoruz. 
+# 3 kopya (replicas: 3) oluşturulacak, güncelleme yapılandırması 
+# ve yeniden başlatma politikası belirlenmiştir.
 
 
